@@ -50,6 +50,33 @@ ol.tut li{margin-bottom:7px}
 .note{background:#eef4ff;border-left:4px solid var(--navy);padding:10px 12px;border-radius:8px;font-size:14px;margin:10px 0}
 .done{color:var(--ok);font-weight:700}
 footer{text-align:center;font-size:12px;color:var(--muted);padding:6px 16px 30px}
+.atalho{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--muted);margin-bottom:12px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.atalho button,.link{background:none;border:0;color:var(--navy);font-weight:700;text-decoration:underline;font-size:14px;cursor:pointer;padding:4px 2px}
+.link{display:block;margin:12px auto 0}
+.pg{display:flex;gap:6px;justify-content:center;margin:-2px 0 12px}
+.pg i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.pg i.on{background:var(--orange);width:22px;border-radius:6px}
+.wz{display:none}.wz.on{display:block}
+.wz p{margin:12px 0 4px}
+.nav{display:flex;gap:10px}.nav .btn{margin-top:14px}
+.mock{background:#f7f9fc;border:2px solid #dfe5ee;border-radius:16px;padding:14px;max-width:320px;margin:0 auto;display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.mk-gov{color:#1351b4;font-weight:800;font-size:22px;letter-spacing:-.5px}
+.mk-title{font-weight:700;color:var(--navy);text-align:center}
+.mk-btn{background:#1351b4;color:#fff;border-radius:999px;padding:9px 14px;text-align:center;font-size:14px;box-shadow:0 0 0 4px rgba(240,138,28,.45)}
+.mk-bar{font-size:13px;color:var(--muted);font-weight:600}
+.mk-arrow{text-align:center;color:var(--orange);font-size:22px;line-height:1}
+.mk-file{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:13px;word-break:break-all}
+.mk-file.on{border:2px solid var(--orange);background:#fff3e6;font-weight:700}
+.mk-pdf{background:#fff;gap:7px}
+.mk-l{height:7px;background:#e3e8ef;border-radius:4px}.mk-l.s{width:60%}
+.mk-sig{border:3px solid var(--orange);border-radius:8px;height:64px;color:var(--orange);font-weight:800;font-size:13px;padding:6px 8px;position:relative}
+.mk-stamp{position:absolute;right:8px;bottom:6px;background:#1351b4;color:#fff;font-weight:600;font-size:12px;border-radius:6px;padding:4px 8px;transform:rotate(-3deg)}
+.mk-code{display:flex;gap:6px;justify-content:center}
+.mk-code i{font-style:normal;width:30px;height:38px;border:2px solid #1351b4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;background:#fff}
+.pick{cursor:pointer}
+.sep{text-align:center;color:var(--muted);font-size:13px;margin:16px 0 4px;display:flex;align-items:center;gap:10px}
+.sep::before,.sep::after{content:"";flex:1;height:1px;background:var(--line)}
+.recomecar{text-align:center}
 @media (max-width:520px){.grid{grid-template-columns:1fr}.qty{grid-template-columns:1fr}}
 </style>
 </head>
@@ -62,6 +89,10 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:6px 16px 30px
   <div class="steps"><div id="st1" class="on">1. Preencher</div><div id="st2">2. Assinar no gov.br</div><div id="st3">3. Devolver</div></div>
 
   <section id="fase1">
+  <div class="atalho">Já preencheu antes?
+    <button type="button" onclick="fase(2)">Ir para assinar</button>
+    <button type="button" onclick="fase(3)">Devolver o PDF assinado</button>
+  </div>
   <p class="hint">Preencha os dados abaixo. No final geramos a sua autorização em PDF, pronta para você assinar pelo gov.br, de graça e com validade jurídica. Nada do que você digita fica salvo neste site.</p>
 
   <div class="card">
@@ -133,34 +164,95 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:6px 16px 30px
   <section id="fase2" class="hidden">
     <div class="card">
       <h2><span>2</span>Assine pelo gov.br</h2>
-      <p class="done">✔ Sua autorização foi gerada e baixada: <span id="fname"></span></p>
-      <button class="btn btn-navy" id="baixarDeNovo" style="font-size:15px;padding:11px">Baixar o PDF de novo</button>
-      <a class="btn btn-main" href="https://assinador.iti.br/" target="_blank" rel="noopener">Abrir o Assinador gov.br</a>
-      <ol class="tut">
-        <li>Entre com a sua conta <b>gov.br</b> (CPF e senha). A conta precisa ser nível <b>prata ou ouro</b>.</li>
-        <li>Toque em <b>"Escolher arquivo"</b> e selecione o PDF que acabou de baixar (fica em <i>Downloads</i>).</li>
-        <li>Arraste a sua assinatura para o campo <b>"Assinatura"</b> do quadro do proprietário e toque em <b>"Assinar"</b>.</li>
-        <li>Confirme com o código que o gov.br envia por SMS ou pelo aplicativo.</li>
-        <li>Toque em <b>"Baixar arquivo assinado"</b>.</li>
-      </ol>
-      <div class="note" id="notaConj">Tem cônjuge ou sócio? Ele(a) faz os mesmos passos, com a conta gov.br dele(a), <b>no arquivo que você já assinou</b>, colocando a assinatura no campo "Assinatura cônjuge".</div>
-      <div class="note">Sem conta prata ou ouro? Abra o app <b>gov.br</b> e faça o reconhecimento facial: em poucos minutos a conta sobe de nível.</div>
-      <button class="btn btn-ghost" id="irFase3">Já assinei, quero devolver</button>
+      <div class="pg" id="pgDots"></div>
+
+      <div class="wz" data-p="0">
+        <p class="done" id="okGerado">✔ Sua autorização foi gerada e salva no celular.</p>
+        <div class="mock">
+          <div class="mk-bar">📁 Downloads / Transferências</div>
+          <div class="mk-file on">📄 <span id="fname">Autorizacao_Venda_Link_....pdf</span></div>
+        </div>
+        <p>O arquivo fica na pasta <b>Downloads</b> (em alguns celulares, <b>Transferências</b> ou <b>Arquivos</b>). Você vai escolher esse arquivo no gov.br.</p>
+        <button class="btn btn-ghost" id="baixarDeNovo" type="button">Baixar o PDF de novo</button>
+      </div>
+
+      <div class="wz" data-p="1">
+        <div class="mock">
+          <div class="mk-gov">gov.br</div>
+          <div class="mk-title">Assinador</div>
+          <div class="mk-btn">Entrar com <b>gov.br</b></div>
+        </div>
+        <p>Toque no botão laranja. Abre o <b>Assinador gov.br</b> numa nova aba. Entre com <b>CPF e senha do gov.br</b>.</p>
+        <a class="btn btn-main" href="https://assinador.iti.br/" target="_blank" rel="noopener">Abrir o Assinador gov.br</a>
+        <div class="note">Precisa ser conta <b>prata ou ouro</b>. Se for bronze, o próprio gov.br avisa: abra o app <b>gov.br</b> e faça o reconhecimento facial, que leva poucos minutos.</div>
+      </div>
+
+      <div class="wz" data-p="2">
+        <div class="mock">
+          <div class="mk-btn">Escolher arquivo</div>
+          <div class="mk-arrow">↓</div>
+          <div class="mk-file">📄 foto_documento.jpg</div>
+          <div class="mk-file on">📄 Autorizacao_Venda_Link_....pdf ✔</div>
+        </div>
+        <p>No Assinador, toque em <b>"Escolher arquivo"</b> (ou "Selecionar arquivo"), abra a pasta <b>Downloads</b> e toque no arquivo que começa com <b>Autorizacao_Venda_Link</b>.</p>
+      </div>
+
+      <div class="wz" data-p="3">
+        <div class="mock mk-pdf">
+          <div class="mk-l"></div><div class="mk-l"></div><div class="mk-l s"></div>
+          <div class="mk-sig">ASSINE AQUI<span class="mk-stamp">✍ assinatura gov.br</span></div>
+          <div class="mk-l"></div><div class="mk-l s"></div>
+        </div>
+        <p>O documento aparece na tela. <b>Toque no quadro laranja "ASSINE AQUI"</b> (na 1ª página, abaixo dos seus dados) para colocar a sua assinatura nele. Depois toque em <b>"Assinar"</b>.</p>
+      </div>
+
+      <div class="wz" data-p="4">
+        <div class="mock">
+          <div class="mk-title">Código de autorização</div>
+          <div class="mk-code"><i>4</i><i>8</i><i>1</i><i>2</i><i>7</i><i>5</i></div>
+          <div class="mk-btn">Confirmar</div>
+        </div>
+        <p>O gov.br envia um <b>código</b> por SMS ou pelo app gov.br. Digite o código e toque em <b>"Confirmar"</b> (ou "Autorizar").</p>
+      </div>
+
+      <div class="wz" data-p="5">
+        <div class="mock">
+          <div class="mk-title">✔ Documento assinado</div>
+          <div class="mk-btn">Baixar arquivo assinado</div>
+        </div>
+        <p>Pronto! Toque em <b>"Baixar arquivo assinado"</b>. Ele vai para a pasta Downloads com <b>"_assinado"</b> no fim do nome.</p>
+        <div class="note" id="notaConj">Tem cônjuge ou sócio? Ele(a) repete estes passos, com a conta gov.br dele(a), <b>no arquivo que você já assinou</b>, no quadro "ASSINE AQUI – cônjuge".</div>
+        <button class="btn btn-main" type="button" onclick="fase(3)">Já baixei, quero devolver para a Link</button>
+      </div>
+
+      <div class="nav">
+        <button class="btn btn-ghost" type="button" id="wzVoltar">‹ Voltar</button>
+        <button class="btn btn-navy" type="button" id="wzProx">Próximo ›</button>
+      </div>
+      <button class="link" type="button" onclick="fase(3)">Já assinei, pular para devolver</button>
     </div>
   </section>
 
   <section id="fase3" class="hidden">
     <div class="card">
       <h2><span>3</span>Devolva para a Link</h2>
-      <p class="hint">Escolha o arquivo <b>assinado</b> (normalmente termina em "_assinado.pdf") e envie direto no WhatsApp da Link.</p>
-      <input type="file" id="assinado" accept="application/pdf">
-      <button class="btn btn-wa" id="enviar">Enviar para a Link pelo WhatsApp</button>
+      <p><b>1.</b> Toque no botão e escolha o arquivo que termina em <b>_assinado.pdf</b>:</p>
+      <label class="btn btn-navy pick" for="assinado">📎 Escolher o PDF assinado</label>
+      <input type="file" id="assinado" accept="application/pdf,.pdf" class="hidden">
+      <div id="escolhido" class="hidden">
+        <p class="done">✔ <span id="nomeEscolhido"></span></p>
+        <p><b>2.</b> Agora toque em enviar e escolha <b>WhatsApp › Link Imóveis</b>:</p>
+        <button class="btn btn-wa" id="enviar" type="button">Enviar no WhatsApp da Link</button>
+      </div>
       <div class="err" id="err3"></div>
-      <div class="note">Se o envio direto não abrir no seu celular, toque abaixo para abrir a conversa da Link e anexe o PDF assinado (📎 › Documento).</div>
-      <a class="btn btn-ghost" id="waLink" target="_blank" rel="noopener">Abrir conversa com a Link</a>
-      <button class="btn btn-ghost" id="voltar" style="font-size:14px;padding:10px">Voltar</button>
+      <div class="sep">ou</div>
+      <p class="hint">Abra a conversa da Link e anexe o arquivo: toque no <b>📎 (clipe)</b> › <b>Documento</b> › arquivo que termina em <b>_assinado.pdf</b>.</p>
+      <a class="btn btn-ghost" id="waLink" target="_blank" rel="noopener">Abrir conversa com a Link (WhatsApp)</a>
+      <button class="link" type="button" onclick="fase(2)">‹ Voltar para assinar</button>
     </div>
   </section>
+
+  <div class="recomecar hidden" id="recomecar"><button class="link" type="button" id="btnNova">Preencher uma nova autorização</button></div>
 </main>
 <footer>Link Imóveis · CRECI 6305-J · Av. Guaicurus, nº 3392 – Universitário – Campo Grande/MS<br>Os dados ficam só no seu aparelho e no PDF que você envia para a Link.</footer>
 
@@ -240,7 +332,14 @@ function gerarPDF(d) {
   y += 15.5;
   doc.setFillColor(...GRAY); doc.rect(CX, y, CW/2, 4.6, "FD"); doc.rect(CX+CW/2, y, CW/2, 4.6, "FD");
   doc.setFont("helvetica","bolditalic"); doc.setFontSize(8.5); doc.text("Assinatura:", CX+1.5, y+3.3); doc.text("Assinatura cônjuge:", CX+CW/2+1.5, y+3.3);
-  y += 4.6; doc.rect(CX, y, CW/2, 16); doc.rect(CX+CW/2, y, CW/2, 16); y += 16;
+  y += 4.6; doc.rect(CX, y, CW/2, 16); doc.rect(CX+CW/2, y, CW/2, 16);
+  // quadros laranja "ASSINE AQUI": é onde a pessoa coloca a assinatura no Assinador gov.br
+  const sigBox = (x, txt) => { doc.setDrawColor(240,138,28); doc.setLineWidth(0.7); doc.rect(x+1.2, y+1.2, CW/2-2.4, 13.6);
+    doc.setFont("helvetica","bold"); doc.setFontSize(7); doc.setTextColor(240,138,28); doc.text(txt, x+2.4, y+4.2);
+    doc.setTextColor(...DARK); doc.setDrawColor(90); doc.setLineWidth(0.25); };
+  sigBox(CX, "ASSINE AQUI (gov.br)");
+  if (c) sigBox(CX+CW/2, "ASSINE AQUI – cônjuge (gov.br)");
+  y += 16;
   side(yP, y, "PROPRIETÁRIO(A)");
   // ---- IMÓVEL
   y += 3; const yI = y;
@@ -313,10 +412,35 @@ function nomeArq(d) {
   const n = (d.p_nome || "proprietario").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 40);
   return `Autorizacao_Venda_Link_${n}.pdf`;
 }
+// ---- navegação (guarda só o passo, nunca dados pessoais; vale 12 h) ----
+const K = "link_aut_passo", NP = 6; let wz = 0;
+function salva() { try { localStorage.setItem(K, JSON.stringify({f: faseAtual, w: wz, t: Date.now()})); } catch (e) {} }
+let faseAtual = 1;
 function fase(n) {
+  faseAtual = n;
   [1,2,3].forEach(i => { $("fase"+i).classList.toggle("hidden", i !== n); $("st"+i).classList.toggle("on", i <= n); });
+  $("recomecar").classList.toggle("hidden", n === 1);
+  if (n === 2) passo(wz); else salva();
   window.scrollTo({top: 0, behavior: "smooth"});
 }
+$("pgDots").innerHTML = Array.from({length: NP}, () => "<i></i>").join("");
+function passo(i) {
+  wz = Math.max(0, Math.min(NP-1, i));
+  document.querySelectorAll(".wz").forEach(e => e.classList.toggle("on", +e.dataset.p === wz));
+  document.querySelectorAll("#pgDots i").forEach((e, k) => e.classList.toggle("on", k === wz));
+  $("wzVoltar").style.visibility = wz ? "visible" : "hidden";
+  $("wzProx").style.display = wz === NP-1 ? "none" : "";
+  $("okGerado").classList.toggle("hidden", !ultimo);
+  salva();
+}
+$("wzProx").onclick = () => { passo(wz+1); $("fase2").scrollIntoView({behavior: "smooth"}); };
+$("wzVoltar").onclick = () => { passo(wz-1); $("fase2").scrollIntoView({behavior: "smooth"}); };
+$("btnNova").onclick = () => { try { localStorage.removeItem(K); } catch (e) {} wz = 0; fase(1); };
+try {   // voltou para a página depois de ir ao gov.br (o celular pode ter recarregado a aba)
+  const s = JSON.parse(localStorage.getItem(K) || "null");
+  if (s && s.f > 1 && Date.now() - s.t < 12*3600*1000) { wz = s.w || 0; fase(s.f); }
+} catch (e) {}
+
 $("gerar").onclick = () => {
   const obrig = ["p_nome","p_doc","p_tel","i_log","i_num","i_bairro","i_valor"];
   const falta = obrig.filter(id => !v(id));
@@ -326,21 +450,25 @@ $("gerar").onclick = () => {
   const d = dados(false); ultimo = gerarPDF(d); ultimoNome = nomeArq(d);
   ultimo.save(ultimoNome); $("fname").textContent = ultimoNome;
   $("notaConj").classList.toggle("hidden", !d.tem_conj);
-  fase(2);
+  wz = 0; fase(2);
 };
-$("baixarDeNovo").onclick = () => ultimo && ultimo.save(ultimoNome);
+$("baixarDeNovo").onclick = () => { if (ultimo) ultimo.save(ultimoNome); else fase(1); };
 $("branco").onclick = () => gerarPDF(dados(true)).save("Autorizacao_Venda_Link_EM_BRANCO.pdf");
-$("irFase3").onclick = () => fase(3);
-$("voltar").onclick = () => fase(2);
+$("assinado").onchange = () => {
+  const f = $("assinado").files[0]; $("err3").textContent = "";
+  $("escolhido").classList.toggle("hidden", !f);
+  if (!f) return;
+  $("nomeEscolhido").textContent = f.name;
+  if (!/assinad/i.test(f.name)) $("err3").textContent = "Atenção: o nome deste arquivo não tem \"assinado\". Confira se é o PDF baixado do gov.br depois de assinar.";
+};
 $("enviar").onclick = async () => {
   const f = $("assinado").files[0]; $("err3").textContent = "";
   if (!f) { $("err3").textContent = "Escolha primeiro o PDF assinado."; return; }
-  if (!/assinad/i.test(f.name) && !confirm("O nome do arquivo não tem \"assinado\". Tem certeza de que é o PDF assinado no gov.br?")) return;
   const texto = "Olá! Segue a autorização de venda assinada pelo gov.br.";
   if (navigator.canShare && navigator.canShare({files: [f]})) {
     try { await navigator.share({files: [f], text: texto, title: "Autorização de venda"}); return; } catch (e) { if (e.name === "AbortError") return; }
   }
-  $("err3").textContent = "Seu navegador não permite o envio direto. Use o botão abaixo e anexe o PDF na conversa.";
+  $("err3").textContent = "Este celular não permite o envio direto. Toque em \"Abrir conversa com a Link\" e anexe o PDF (📎 › Documento).";
 };
 </script>
 </body>
