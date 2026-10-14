@@ -99,6 +99,12 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:6px 16px 30px
 .mk-hl3{outline:3px solid var(--orange)}
 details.alt{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
 details.alt summary{cursor:pointer;color:var(--navy);font-weight:600;font-size:14px}
+.volta{position:fixed;inset:0;background:rgba(13,27,51,.72);display:flex;align-items:flex-end;justify-content:center;z-index:50;padding:16px}
+.volta.hidden{display:none}
+.volta-box{background:#fff;border-radius:18px;padding:20px 16px 14px;width:100%;max-width:460px;max-height:92vh;overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.volta-box h3{margin:6px 0 4px;text-align:center;color:var(--navy);font-size:20px}
+.volta-ico{width:54px;height:54px;border-radius:50%;background:#fff3e6;color:var(--orange);font-size:28px;display:flex;align-items:center;justify-content:center;margin:0 auto}
+@media (min-width:700px){.volta{align-items:center}}
 @media (max-width:520px){.grid{grid-template-columns:1fr}.qty{grid-template-columns:1fr}}
 </style>
 </head>
@@ -205,7 +211,7 @@ details.alt summary{cursor:pointer;color:var(--navy);font-weight:600;font-size:1
           <div class="mk-btn">Entrar com <b>gov.br</b></div>
         </div>
         <p>Toque no botão laranja. Abre o <b>Assinador gov.br</b> numa nova aba. Entre com <b>CPF e senha do gov.br</b>.</p>
-        <a class="btn btn-main" href="https://assinador.iti.br/" target="_blank" rel="noopener">Abrir o Assinador gov.br</a>
+        <a class="btn btn-main" id="abrirGov" href="https://assinador.iti.br/" target="_blank" rel="noopener">Abrir o Assinador gov.br</a>
         <div class="note">Precisa ser conta <b>prata ou ouro</b>. Se for bronze, o próprio gov.br avisa: abra o app <b>gov.br</b> e faça o reconhecimento facial, que leva poucos minutos.</div>
       </div>
 
@@ -323,6 +329,26 @@ details.alt summary{cursor:pointer;color:var(--navy);font-weight:600;font-size:1
       <button class="link" type="button" onclick="fase(2)">‹ Voltar para assinar</button>
     </div>
   </section>
+  <div class="volta hidden" id="volta" role="dialog" aria-modal="true" aria-labelledby="voltaTit">
+    <div class="volta-box">
+      <div class="volta-ico">✍</div>
+      <h3 id="voltaTit">Já assinou e baixou o documento?</h3>
+      <div id="voltaPasso1">
+        <button class="btn btn-wa" type="button" id="voltaSim">Sim, enviar agora para a Link</button>
+        <p class="tip" style="text-align:center">Vai abrir a escolha de arquivo: toque no que termina em <b>_assinado.pdf</b> (normalmente é o primeiro, em "Recentes").</p>
+        <button class="btn btn-ghost" type="button" id="voltaNao">Ainda não, continuar assinando</button>
+      </div>
+      <div id="voltaPasso2" class="hidden">
+        <p class="done" style="text-align:center">✔ <span id="voltaNome"></span></p>
+        <p class="tip" id="voltaAviso"></p>
+        <button class="btn btn-wa" type="button" id="voltaEnviar">Enviar no WhatsApp ➤</button>
+        <p class="tip" style="text-align:center">Escolha <b>WhatsApp</b> e depois o contato <b>Link Imóveis</b> ((67) 99339-7884).</p>
+        <button class="btn btn-ghost" type="button" id="voltaTrocar">Escolher outro arquivo</button>
+      </div>
+      <div class="err" id="voltaErr"></div>
+      <button class="link" type="button" id="voltaGuia">Prefiro mandar pelo WhatsApp sozinho (ver passo a passo)</button>
+    </div>
+  </div>
   <div class="recomecar hidden" id="recomecar"><button class="link" type="button" id="btnNova">Preencher uma nova autorização</button></div>
 </main>
 <footer>Link Imóveis · CRECI 6305-J · Av. Guaicurus, nº 3392 – Universitário – Campo Grande/MS<br>Os dados ficam só no seu aparelho e no PDF que você envia para a Link.</footer>
@@ -485,7 +511,8 @@ function nomeArq(d) {
 }
 // ---- navegação (guarda só o passo, nunca dados pessoais; vale 12 h) ----
 const K = "link_aut_passo", NP = 6; let wz = 0;
-function salva() { try { localStorage.setItem(K, JSON.stringify({f: faseAtual, w: wz, t: Date.now()})); } catch (e) {} }
+let foiGov = false;
+function salva() { try { localStorage.setItem(K, JSON.stringify({f: faseAtual, w: wz, g: foiGov, t: Date.now()})); } catch (e) {} }
 let faseAtual = 1;
 function fase(n) {
   faseAtual = n;
@@ -509,7 +536,7 @@ $("wzVoltar").onclick = () => { passo(wz-1); $("fase2").scrollIntoView({behavior
 $("btnNova").onclick = () => { try { localStorage.removeItem(K); } catch (e) {} wz = 0; fase(1); };
 try {   // voltou para a página depois de ir ao gov.br (o celular pode ter recarregado a aba)
   const s = JSON.parse(localStorage.getItem(K) || "null");
-  if (s && s.f > 1 && Date.now() - s.t < 12*3600*1000) { wz = s.w || 0; fase(s.f); }
+  if (s && s.f > 1 && Date.now() - s.t < 12*3600*1000) { wz = s.w || 0; foiGov = !!s.g; fase(s.f); if (foiGov && s.f === 2) abreVolta(); }
 } catch (e) {}
 
 $("gerar").onclick = () => {
@@ -525,6 +552,46 @@ $("gerar").onclick = () => {
 };
 $("baixarDeNovo").onclick = () => { if (ultimo) ultimo.save(ultimoNome); else fase(1); };
 $("branco").onclick = () => gerarPDF(dados(true)).save("Autorizacao_Venda_Link_EM_BRANCO.pdf");
+// ---- tela de retorno: a pessoa foi ao gov.br e voltou para esta aba ----
+function abreVolta() {
+  if (faseAtual !== 2) return;
+  $("voltaPasso1").classList.remove("hidden"); $("voltaPasso2").classList.add("hidden");
+  $("voltaErr").textContent = ""; $("volta").classList.remove("hidden");
+}
+function fechaVolta() { $("volta").classList.add("hidden"); }
+$("abrirGov").addEventListener("click", () => { foiGov = true; salva(); });
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden" && faseAtual === 2 && wz >= 1) { foiGov = true; salva(); }
+  else if (document.visibilityState === "visible" && foiGov && faseAtual === 2) abreVolta();
+});
+const pickVolta = document.createElement("input");
+pickVolta.type = "file"; pickVolta.accept = "application/pdf,.pdf"; pickVolta.className = "hidden"; document.body.appendChild(pickVolta);
+$("voltaSim").onclick = () => { $("voltaErr").textContent = ""; pickVolta.value = ""; pickVolta.click(); };
+$("voltaTrocar").onclick = () => { pickVolta.value = ""; pickVolta.click(); };
+$("voltaNao").onclick = () => { foiGov = false; salva(); fechaVolta(); };
+$("voltaGuia").onclick = () => { fechaVolta(); foiGov = false; fase(3); };
+pickVolta.onchange = async () => {
+  const f = pickVolta.files[0]; if (!f) return;
+  $("voltaNome").textContent = f.name;
+  $("voltaAviso").textContent = /assinad/i.test(f.name) ? "" : "Atenção: o nome deste arquivo não tem \"assinado\". Confira se é o PDF baixado do gov.br depois de assinar.";
+  $("voltaPasso1").classList.add("hidden"); $("voltaPasso2").classList.remove("hidden");
+  if (/assinad/i.test(f.name)) await compartilha(f, true);   // tenta abrir o compartilhamento direto
+};
+async function compartilha(f, silencioso) {
+  const texto = "Olá! Segue a autorização de venda assinada pelo gov.br.";
+  if (navigator.canShare && navigator.canShare({files: [f]})) {
+    try { await navigator.share({files: [f], text: texto, title: "Autorização de venda"}); concluido(); return true; }
+    catch (e) { if (e.name === "AbortError") return false; if (silencioso) return false; }
+  }
+  if (!silencioso) $("voltaErr").textContent = "Este celular não deixa enviar direto daqui. Toque em \"Prefiro mandar pelo WhatsApp sozinho\" e siga as figuras.";
+  return false;
+}
+$("voltaEnviar").onclick = () => compartilha(pickVolta.files[0], false);
+function concluido() {
+  fechaVolta(); foiGov = false; fase(3);
+  $("err3").textContent = ""; document.querySelector("#fase3 .note").innerHTML = "<b>✔ Enviado!</b> Assim que o arquivo chegar, a Link confirma o recebimento pelo WhatsApp.";
+  document.querySelector("#fase3 .note").scrollIntoView({behavior: "smooth"});
+}
 $("assinado").onchange = () => {
   const f = $("assinado").files[0]; $("err3").textContent = "";
   $("escolhido").classList.toggle("hidden", !f);
