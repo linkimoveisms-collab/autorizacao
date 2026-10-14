@@ -77,6 +77,28 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:6px 16px 30px
 .sep{text-align:center;color:var(--muted);font-size:13px;margin:16px 0 4px;display:flex;align-items:center;gap:10px}
 .sep::before,.sep::after{content:"";flex:1;height:1px;background:var(--line)}
 .recomecar{text-align:center}
+.dv{display:flex;gap:12px;margin:14px 0 6px;padding-bottom:14px;border-bottom:1px solid #eef1f5}
+.dv-n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--orange);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.dv-c{flex:1;min-width:0}.dv-c p{margin:2px 0 10px}
+.tip{font-size:13px;color:var(--muted)}
+.mk-hl{background:var(--orange);color:#fff;border-radius:8px;padding:6px 12px;box-shadow:0 0 0 4px rgba(240,138,28,.35)}
+.mk-noti{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border-radius:12px;padding:10px 12px;font-size:13px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.mk-noti small{color:var(--muted)}
+.mk-pdfview{background:#fff}
+.mk-top{display:flex;align-items:center;gap:10px;font-size:12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.mk-top span:first-child{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mk-top .ico{font-size:18px;padding:2px 9px}
+.mk-apps{display:flex;justify-content:space-around;gap:6px}
+.mk-apps span{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;padding:6px;border-radius:10px}
+.mk-apps i{font-style:normal;width:40px;height:40px;border-radius:50%;background:#e3e8ef;display:flex;align-items:center;justify-content:center;font-size:18px}
+.mk-apps i.wa{background:#25d366;color:#fff}
+.mk-hl2{outline:3px solid var(--orange);font-weight:700}
+.mk-search{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:13px}
+.mk-contact{display:flex;align-items:center;gap:10px;background:#fff;border-radius:10px;padding:8px 10px;font-size:13px}
+.mk-contact i{font-style:normal;width:36px;height:36px;border-radius:50%;background:var(--navy);color:var(--orange);font-weight:800;display:flex;align-items:center;justify-content:center}
+.mk-hl3{outline:3px solid var(--orange)}
+details.alt{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+details.alt summary{cursor:pointer;color:var(--navy);font-weight:600;font-size:14px}
 @media (max-width:520px){.grid{grid-template-columns:1fr}.qty{grid-template-columns:1fr}}
 </style>
 </head>
@@ -221,8 +243,9 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:6px 16px 30px
           <div class="mk-btn">Baixar arquivo assinado</div>
         </div>
         <p>Pronto! Toque em <b>"Baixar arquivo assinado"</b>. Ele vai para a pasta Downloads com <b>"_assinado"</b> no fim do nome.</p>
+        <p class="tip">Dica: quando aparecer o aviso do download, já toque em <b>"Abrir"</b>. O próximo passo começa daí.</p>
         <div class="note" id="notaConj">Tem cônjuge ou sócio? Ele(a) repete estes passos, com a conta gov.br dele(a), <b>no arquivo que você já assinou</b>, no quadro "ASSINE AQUI – cônjuge".</div>
-        <button class="btn btn-main" type="button" onclick="fase(3)">Já baixei, quero devolver para a Link</button>
+        <button class="btn btn-main" type="button" onclick="fase(3)">Já baixei: como devolver para a Link</button>
       </div>
 
       <div class="nav">
@@ -235,23 +258,71 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:6px 16px 30px
 
   <section id="fase3" class="hidden">
     <div class="card">
-      <h2><span>3</span>Devolva para a Link</h2>
-      <p><b>1.</b> Toque no botão e escolha o arquivo que termina em <b>_assinado.pdf</b>:</p>
-      <label class="btn btn-navy pick" for="assinado">📎 Escolher o PDF assinado</label>
-      <input type="file" id="assinado" accept="application/pdf,.pdf" class="hidden">
-      <div id="escolhido" class="hidden">
-        <p class="done">✔ <span id="nomeEscolhido"></span></p>
-        <p><b>2.</b> Agora toque em enviar e escolha <b>WhatsApp › Link Imóveis</b>:</p>
-        <button class="btn btn-wa" id="enviar" type="button">Enviar no WhatsApp da Link</button>
+      <h2><span>3</span>Devolva para a Link pelo WhatsApp</h2>
+      <p class="hint">É o mesmo jeito de mandar qualquer arquivo no WhatsApp. Siga as 4 figuras:</p>
+
+      <div class="dv">
+        <div class="dv-n">1</div>
+        <div class="dv-c">
+          <p>Logo depois de tocar em <b>"Baixar arquivo assinado"</b> no gov.br, aparece o aviso do download. Toque em <b>"Abrir"</b>.</p>
+          <div class="mock">
+            <div class="mk-noti"><span>📄 Autorizacao_..._assinado.pdf<br><small>Download concluído</small></span><b class="mk-hl">Abrir</b></div>
+          </div>
+          <p class="tip">Sumiu o aviso? Abra o app <b>Arquivos</b> (ou "Meus arquivos"), entre em <b>Downloads</b> e toque no arquivo que termina em <b>_assinado.pdf</b>.</p>
+        </div>
       </div>
-      <div class="err" id="err3"></div>
-      <div class="sep">ou</div>
-      <p class="hint">Abra a conversa da Link e anexe o arquivo: toque no <b>📎 (clipe)</b> › <b>Documento</b> › arquivo que termina em <b>_assinado.pdf</b>.</p>
-      <a class="btn btn-ghost" id="waLink" target="_blank" rel="noopener">Abrir conversa com a Link (WhatsApp)</a>
+
+      <div class="dv">
+        <div class="dv-n">2</div>
+        <div class="dv-c">
+          <p>Com o PDF aberto, toque em <b>Compartilhar</b> (o ícone <b>⤴</b> ou <b>&lt;</b>, ou nos <b>⋮</b> › Compartilhar).</p>
+          <div class="mock mk-pdfview">
+            <div class="mk-top"><span>Autorizacao_..._assinado.pdf</span><b class="mk-hl ico">⤴</b><span class="ico">⋮</span></div>
+            <div class="mk-l"></div><div class="mk-l"></div><div class="mk-l s"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dv">
+        <div class="dv-n">3</div>
+        <div class="dv-c">
+          <p>Na lista de aplicativos, escolha <b>WhatsApp</b>.</p>
+          <div class="mock">
+            <div class="mk-apps"><span><i>✉</i>E-mail</span><span class="mk-hl2"><i class="wa">✆</i>WhatsApp</span><span><i>☁</i>Drive</span><span><i>⋯</i>Mais</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dv">
+        <div class="dv-n">4</div>
+        <div class="dv-c">
+          <p>Pesquise <b>Link</b> ou o número <b>(67) 99339-7884</b>, toque no contato e em <b>Enviar ➤</b>.</p>
+          <div class="mock">
+            <div class="mk-search">🔍 Link</div>
+            <div class="mk-contact mk-hl3"><i>L</i><span><b>Link Imóveis</b><br><small>(67) 99339-7884</small></span></div>
+          </div>
+          <p class="tip">Não aparece? Salve o contato antes: toque em <b>Copiar número</b> e adicione na agenda como "Link Imóveis".</p>
+          <button class="btn btn-ghost" type="button" id="copiarNum">Copiar número (67) 99339-7884</button>
+        </div>
+      </div>
+
+      <div class="note">Tudo certo! Quando o arquivo chegar, a Link confirma o recebimento pelo WhatsApp.</div>
+      <a class="btn btn-wa" id="waLink" target="_blank" rel="noopener">Abrir conversa com a Link</a>
+      <p class="hint" style="text-align:center;margin-top:6px">Se preferir: abra a conversa e toque no 📎 (clipe) › <b>Documento</b> › arquivo <b>_assinado.pdf</b>.</p>
+
+      <details class="alt">
+        <summary>Outra forma: escolher o arquivo aqui na página</summary>
+        <label class="btn btn-navy pick" for="assinado">📎 Escolher o PDF assinado</label>
+        <input type="file" id="assinado" accept="application/pdf,.pdf" class="hidden">
+        <div id="escolhido" class="hidden">
+          <p class="done">✔ <span id="nomeEscolhido"></span></p>
+          <button class="btn btn-wa" id="enviar" type="button">Enviar no WhatsApp da Link</button>
+        </div>
+        <div class="err" id="err3"></div>
+      </details>
       <button class="link" type="button" onclick="fase(2)">‹ Voltar para assinar</button>
     </div>
   </section>
-
   <div class="recomecar hidden" id="recomecar"><button class="link" type="button" id="btnNova">Preencher uma nova autorização</button></div>
 </main>
 <footer>Link Imóveis · CRECI 6305-J · Av. Guaicurus, nº 3392 – Universitário – Campo Grande/MS<br>Os dados ficam só no seu aparelho e no PDF que você envia para a Link.</footer>
@@ -461,6 +532,10 @@ $("assinado").onchange = () => {
   $("nomeEscolhido").textContent = f.name;
   if (!/assinad/i.test(f.name)) $("err3").textContent = "Atenção: o nome deste arquivo não tem \"assinado\". Confira se é o PDF baixado do gov.br depois de assinar.";
 };
+$("copiarNum").onclick = async () => {
+  try { await navigator.clipboard.writeText("(67) 99339-7884"); $("copiarNum").textContent = "✔ Número copiado"; }
+  catch (e) { $("copiarNum").textContent = "Número: (67) 99339-7884"; }
+};
 $("enviar").onclick = async () => {
   const f = $("assinado").files[0]; $("err3").textContent = "";
   if (!f) { $("err3").textContent = "Escolha primeiro o PDF assinado."; return; }
@@ -468,7 +543,7 @@ $("enviar").onclick = async () => {
   if (navigator.canShare && navigator.canShare({files: [f]})) {
     try { await navigator.share({files: [f], text: texto, title: "Autorização de venda"}); return; } catch (e) { if (e.name === "AbortError") return; }
   }
-  $("err3").textContent = "Este celular não permite o envio direto. Toque em \"Abrir conversa com a Link\" e anexe o PDF (📎 › Documento).";
+  $("err3").textContent = "Este celular não permite o envio direto. Siga as 4 figuras acima ou toque em \"Abrir conversa com a Link\".";
 };
 </script>
 </body>
